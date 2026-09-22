@@ -18,8 +18,8 @@ open the local URL printed by Streamlit. A virtual environment is recommended if
 ## Using the app
 
 
-set a target efficiency and adjust the two engines independently in the sidebar. the quantum engine has bath temperatures, magnetic fields, stroke times, and transverse coupling. the classical engine has hot and cold temperatures, a compression ratio, and a heat capacity ratio. click **Run comparison** to see each engine's efficiency and its difference from the target in percentage points.
+set a target efficiency and shared hot and cold bath temperatures, then adjust each engine’s remaining parameters independently. the quantum engine has magnetic fields, stroke times, and transverse coupling, while the classical engine has a compression ratio, work-stroke time, thermalisation time, and heat capacity ratio. click run comparison to compare their efficiencies.
 
-efficiency is work output divided by heat absorbed from the hot bath. the quantum result comes from a repeated cycle with finite stroke times. the classical result assumes an ideal gas with reversible adiabatic strokes. if an engine does not absorb heat and produce positive work, the app reports that it is not operating as an engine.
+efficiency is work output divided by heat absorbed from the hot bath. the quantum result comes from a repeated finite-time cycle. the classical result uses a finite-time ideal-gas otto model with incomplete work strokes and incomplete thermalisation.
 
 a quantum advantage can be seen from this application. it can be seen that from the first graph, the quantum otto engine reaches a larger efficiency than the classical otto engine under the chosen simulation parameters. the second graph also shows that as the cycle time increases, the quantum engine becomes more efficient before gradually approaching a maximum value. throughout the simulated range, its efficiency remains above that of the classical engine. this demonstrates a theoretical quantum advantage within the assumptions of this model, rather than proving that quantum otto engines are universally more efficient than classical engines.
