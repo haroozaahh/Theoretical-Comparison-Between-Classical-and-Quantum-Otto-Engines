@@ -1,6 +1,6 @@
 # Quantum Otto Cycle Simulator
 
-A Streamlit app for exploring a quantum Otto cycle with a two-level system as its working fluid. The simulation uses QuTiP to model two magnetic-field strokes and two thermalization strokes.
+A Streamlit app comparing the efficiency of a two-level quantum Otto engine with an ideal gas classical Otto engine. The quantum simulation uses QuTiP to model two magnetic-field strokes and two thermalization strokes.
 
 ## Run locally
 
@@ -15,6 +15,6 @@ Open the local URL printed by Streamlit. A virtual environment is recommended if
 
 ## Using the app
 
-Set the hot and cold bath temperatures, maximum and minimum magnetic-field gaps, stroke durations, and transverse coupling in the sidebar. Click **Run Simulation** to solve one cycle. The transverse coupling controls transitions during the magnetic-field strokes.
+Set a target efficiency and adjust the two engines independently in the sidebar. The quantum engine has bath temperatures, magnetic fields, stroke times, and transverse coupling. The classical engine has hot and cold temperatures, a compression ratio, and a heat capacity ratio. Click **Run comparison** to see each engine's efficiency and its difference from the target in percentage points.
 
-**Current state:** The app runs the four strokes but does not yet display plots or numerical results after the simulation finishes.
+Efficiency is work output divided by heat absorbed from the hot bath. The quantum result comes from a repeated cycle with finite stroke times. The classical result assumes an ideal gas with reversible adiabatic strokes. If an engine does not absorb heat and produce positive work, the app reports that it is not operating as an engine.
