@@ -129,9 +129,11 @@ st.write(
 with st.sidebar:
     target = st.slider("Target efficiency (%)", 1, 95, 50)
 
+    st.header("Shared bath temperatures")
+    hot_temperature = st.slider("Hot bath temperature", 2.0, 15.0, 10.0, 0.5)
+    cold_temperature = st.slider("Cold bath temperature", 0.1, 2.0, 0.5, 0.1)
+
     st.header("Quantum engine")
-    q_hot_temp = st.slider("Hot bath temperature", 2.0, 15.0, 10.0, 0.5, key="q_hot")
-    q_cold_temp = st.slider("Cold bath temperature", 0.1, 2.0, 0.5, 0.1, key="q_cold")
     hot_field = st.slider("Maximum magnetic field", 2.0, 10.0, 5.0, 0.5)
     cold_field = st.slider("Minimum magnetic field", 0.5, 3.0, 1.0, 0.1)
     field_time = st.slider("Magnetic field stroke time", 0.5, 20.0, 5.0, 0.5)
@@ -142,8 +144,6 @@ with st.sidebar:
     )
 
     st.header("Classical engine (ideal gas)")
-    c_hot_temp = st.slider("Hot temperature", 2.0, 15.0, 10.0, 0.5, key="c_hot")
-    c_cold_temp = st.slider("Cold temperature", 0.1, 2.0, 0.5, 0.1, key="c_cold")
     compression_ratio = st.slider("Compression ratio", 1.1, 10.0, 2.0, 0.1)
     c_work_time = st.slider("Classical work-stroke time", 0.5, 20.0, 5.0, 0.5)
     c_bath_time = st.slider("Classical thermalization time", 1.0, 20.0, 10.0, 1.0)
@@ -159,12 +159,12 @@ if st.button("Run comparison", type="primary"):
 
     with st.spinner("Solving quantum cycles..."):
         q_heat, q_work, converged = quantum_cycle(
-            q_hot_temp, q_cold_temp, hot_field, cold_field, coupling,
+            hot_temperature, cold_temperature, hot_field, cold_field, coupling,
             field_time, bath_time,
         )
     c_heat, c_work, c_converged = classical_cycle(
-        c_hot_temp,
-        c_cold_temp,
+        hot_temperature,
+        cold_temperature,
         compression_ratio,
         heat_capacity_ratio,
         c_work_time,
@@ -199,7 +199,13 @@ if st.button("Run comparison", type="primary"):
     if quantum_efficiency and classical_efficiency:
         difference = quantum_efficiency - classical_efficiency
         difference = difference * 100
-        st.write(f"Quantum minus classical efficiency: **{difference:+.1f} percentage points**.")
+        if difference > 0:
+            st.write(
+                "Quantum advantage within the assumptions of these finite-time models: "
+                f"**{difference:+.1f} percentage points**."
+            )
+        else:
+            st.write(f"Quantum minus classical efficiency: **{difference:+.1f} percentage points**.")
 
     st.subheader("Efficiency vs cycle time")
     base_quantum_time = 2 * (field_time + bath_time)
@@ -223,8 +229,8 @@ if st.button("Run comparison", type="primary"):
         classical_bath_time = c_bath_time * classical_scale
 
         quantum_heat, quantum_work, _ = quantum_cycle(
-            q_hot_temp,
-            q_cold_temp,
+            hot_temperature,
+            cold_temperature,
             hot_field,
             cold_field,
             coupling,
@@ -232,8 +238,8 @@ if st.button("Run comparison", type="primary"):
             quantum_bath_time,
         )
         classical_heat, classical_work, _ = classical_cycle(
-            c_hot_temp,
-            c_cold_temp,
+            hot_temperature,
+            cold_temperature,
             compression_ratio,
             heat_capacity_ratio,
             classical_work_time,
@@ -275,7 +281,7 @@ if st.button("Run comparison", type="primary"):
         "together using the separate classical timing controls."
     )
 
-    st.subheader("Power vs cycle time")
+    st.subheader("Power vs cycle time (relative/model units)")
     power_df = graph_df[["Quantum power", "Classical power"]].rename(
         columns={
             "Quantum power": "Finite-time quantum Otto",
@@ -295,6 +301,9 @@ if st.button("Run comparison", type="primary"):
 
     st.caption(
         "Efficiency = work output / heat absorbed from the hot bath. "
+        "A higher quantum efficiency is a quantum advantage only within the assumptions of these "
+        "finite-time models. Power is reported in relative/model units because the quantum and "
+        "classical energy scales are not directly matched. "
         "The quantum value includes finite stroke times and transverse coupling. "
         "The classical model uses an ideal gas with finite-rate work strokes and incomplete "
         "thermalisation; its heat capacity is set to one, so heat and work are in relative units."
