@@ -10,15 +10,18 @@ THERMALIZATION_RATE = 1.0
 
 
 def hamiltonian(field, coupling):
+    """Build the Hamiltonian for the two-level spin system."""
     return 0.5 * field * SZ + 0.5 * coupling * SX
 
 
 def thermal_state(operator, temperature):
+    """Return the normalized thermal state for an operator."""
     state = (-operator / temperature).expm()
     return state / state.tr()
 
 
 def collapse_operators(operator, temperature):
+    """Build the thermal jump operators for the two-level system."""
     energies, states = operator.eigenstates()
     thermal_occupation = 1.0 / np.expm1((energies[1] - energies[0]) / temperature)
     downward = states[0] * states[1].dag()
@@ -30,11 +33,13 @@ def collapse_operators(operator, temperature):
 
 
 def energy(operator, state):
+    """Return the expectation value of an operator in a state."""
     return float(np.real(qt.expect(operator, state)))
 
 
 def quantum_cycle(hot_temperature, cold_temperature, hot_field, cold_field,
                   coupling, field_time, bath_time):
+    """Run the quantum Otto cycle and return its heat, work, and status."""
     hot_hamiltonian = hamiltonian(hot_field, coupling)
     cold_hamiltonian = hamiltonian(cold_field, coupling)
     field_times = np.linspace(0, field_time, 50)
@@ -83,7 +88,7 @@ def quantum_cycle(hot_temperature, cold_temperature, hot_field, cold_field,
 
 def classical_cycle(hot_temperature, cold_temperature, compression_ratio,
                     heat_capacity_ratio, work_time, bath_time):
-    """Finite-time ideal gas Otto cycle with finite work strokes and baths."""
+    """Run the classical Otto cycle and return its heat, work, and status."""
     ratio_power = compression_ratio ** (heat_capacity_ratio - 1)
     temperature = cold_temperature
     converged = False
@@ -186,7 +191,8 @@ if st.button("Run comparison", type="primary"):
         (columns[2], "Classical", classical_efficiency, c_heat, c_work),
     ):
         if efficiency is None:
-            column.metric(name, "Not operating as an engine")
+
+         column.metric(name, "Not operating as an engine")
             column.caption(
                 f"Hot heat: {heat:.3f}; work output: {work:.3f}. "
                 "Positive heat input and work output are required."
