@@ -3,7 +3,7 @@ import pandas as pd
 import qutip as qt
 import streamlit as st
 
-
+# operator gates
 SZ = qt.sigmaz()
 SX = qt.sigmax()
 THERMALIZATION_RATE = 1.0
@@ -36,7 +36,7 @@ def energy(operator, state):
     """Return the expectation value of an operator in a state."""
     return float(np.real(qt.expect(operator, state)))
 
-
+# quantum method
 def quantum_cycle(hot_temperature, cold_temperature, hot_field, cold_field,
                   coupling, field_time, bath_time):
     """Run the quantum Otto cycle and return its heat, work, and status."""
@@ -53,6 +53,7 @@ def quantum_cycle(hot_temperature, cold_temperature, hot_field, cold_field,
             0.5 * coupling * SX,
         ]
 
+    # rates of change
     expansion = changing_hamiltonian(hot_field, cold_field)
     compression = changing_hamiltonian(cold_field, hot_field)
     state = thermal_state(hot_hamiltonian, hot_temperature)
@@ -85,7 +86,7 @@ def quantum_cycle(hot_temperature, cold_temperature, hot_field, cold_field,
 
     return heat, work, converged
 
-
+# classical analogue method
 def classical_cycle(hot_temperature, cold_temperature, compression_ratio,
                     heat_capacity_ratio, work_time, bath_time):
     """Run the classical Otto cycle and return its heat, work, and status."""
