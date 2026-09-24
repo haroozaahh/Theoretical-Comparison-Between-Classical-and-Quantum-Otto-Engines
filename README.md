@@ -4,8 +4,6 @@
 a Streamlit app comparing the efficiency of a two-level quantum Otto engine with an ideal gas classical Otto engine. the quantum simulation uses QuTiP to model two magnetic-field strokes and two thermalization strokes.
 
 
-A Streamlit app comparing a two-level quantum Otto engine with a finite-time ideal-gas classical Otto engine. The quantum simulation uses QuTiP to model two magnetic-field strokes and two thermalization strokes. Both engines use the same hot and cold bath temperatures.
-
 
 ## Run locally
 
